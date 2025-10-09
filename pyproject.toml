@@ -1,0 +1,19 @@
+[project]
+name = "shopping-agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.118.0",
+    "google-adk>=1.14.0",
+    "a2a-sdk>=0.3.7",
+    "asyncclick>=8.1.8",
+    "sse-starlette>=2.2.1",
+    "mcp-use>=1.3.11",
+    "langchain-google-genai>=2.1.12",
+]
+
+[[tool.uv.index]]
+url = "https://mirrors.aliyun.com/pypi/simple"
+default = true
