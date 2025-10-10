@@ -24,143 +24,200 @@ The project contains the following main components:
 
 ### 1. Environment Setup
 
-```bash
-# Clone or download the project locally
-cd examples
+This section guides you through initializing your development environment, including project cloning, virtual environment creation and activation, and dependency installation.
 
-# Install dependencies using UV
-uv sync
+#### 1.1 Clone the Repository
+
+```bash
+git clone https://github.com/Zen7-Labs/examples.git
+```
+
+#### 1.2 Enter the Project Directory
+
+```bash
+cd examples
+```
+
+#### 1.3 Create and Activate a Virtual Environment (Recommended)
+
+1. Create the virtual environment:
+
+        ```bash
+        uv venv
+        ```
+
+2. Activate the virtual environment:
+
+        - **Linux/macOS:**
+            ```bash
+            source .venv/bin/activate
+            ```
+        - **Windows (CMD):**
+            ```bash
+            .venv\Scripts\activate
+            ```
+        - **Windows (PowerShell):**
+            ```powershell
+            .venv\Scripts\Activate.ps1
+            ```
+
+> After activation, your command prompt should show (venv) at the beginning.
+
+#### 1.4 Install Dependencies
+
+```bash
+(venv) $ uv sync
 ```
 
 ### 2. Configure Environment Variables
 
-Create a `.env` file and add the necessary environment variables:
+Create a `.env` file in the project root directory with the following content (fill in your actual keys and service addresses):
 
-```env
-# Google API key (for Gemini model)
+```dotenv
+# Google API Key
 GOOGLE_API_KEY=your_google_api_key_here
 
-# A2A server configuration
+# A2A Service Configuration
 A2A_SERVER_URL=http://localhost:10000
 
-# MCP server configuration
+# MCP Service Configuration
 MCP_HOST=127.0.0.1
 MCP_PORT=8015
 ```
 
+> For blockchain or payment integration, refer to the relevant documentation to add more environment variables as needed.
+
 ### 3. Start Backend Service
 
-First, start the shopping service:
+#### 3.1 Start the Shopping Service (Backend API)
 
 ```bash
-# Start FastAPI shopping service (port 8088)
-uv run python shopping_service/server.py
+(venv) $ uv run python shopping_service/server.py
 ```
+
+#### 3.2 Start the Main Application (Google ADK Web Interface)
+
+```bash
+(venv) $ uv run adk web
+```
+
+Or run the script directly:
+
+- **Linux/macOS:**
+    ```bash
+    ./run.sh
+    ```
+- **Windows:**
+    ```powershell
+    uv run adk web
+    ```
+
+> For custom ports, protocols, and other parameters, refer to the --help/-Help options in run.sh or run.ps1.
 
 ### 4. Start Main Application
 
+---
+
+### 4. Run Components Independently (for Development & Debugging)
+
+You can start each component separately for development and debugging:
+
 ```bash
-# Start Google ADK Web interface
-uv run adk web
-```
+# Start A2A CLI
+(venv) $ uv run python a2a_cli/cli.py
 
-Or use the provided script:
+# Start MCP CLI
+(venv) $ uv run python mcp_cli/cli.py
 
-```bash
-# Linux/Mac
-./run.sh
-
-# Windows
-uv run adk web
+# Start Shopping Service
+(venv) $ uv run python shopping_service/server.py
 ```
 
 ## Usage Guide
 
-### Shopping Workflow
+---
 
-1. **Browse Products**: Ask the shopping assistant to display the available product list
+## 5. 使用指南
+
+## 5. Usage Guide
+
+### 5.1 Shopping Workflow
+
+1. **Browse Products**: Ask the assistant to display all available products
 2. **Select Product**: Choose a product to purchase by name
-3. **Payment Process**: The system will automatically guide you through the payment and settlement process
-4. **Order Tracking**: View order status and payment details
+3. **Payment Process**: The system will guide you through payment and settlement
+4. **Order Tracking**: Check order status and payment details
 
-### Available Products
+### 5.2 Example Product List
 
-The system comes with the following pre-configured product categories:
-
-**Beverages** (Merchant A):
+**Beverages (Merchant A):**
 - Beverage: ¥499
 - Red wine: ¥99
 - Whisky: ¥199
 - Brandy: ¥399
 - Moutai: ¥1499
 
-**Clothing** (Merchant B):
+**Clothing (Merchant B):**
 - Jeans: ¥139
 - Coat: ¥299
 - Shirt: ¥199
 - Suit: ¥599
 
-### Example Conversation
+### 5.3 Example Conversation
 
 ```
-User: "Please show all products"
+User: Show all products
 Assistant: [Displays product list]
 
-User: "I want to buy a coat"
-Assistant: [Selects Coat product and prepares payment process]
+User: I want to buy a coat
+Assistant: [Selects coat and prepares payment process]
 
-User: [Follows prompts to complete payment information input]
+User: [Follows prompts to complete payment information]
 Assistant: [Processes payment and displays order status]
 ```
 
 ## Component Details
 
-### Shopping Agent
+---
 
-The core intelligent assistant with the following capabilities:
-- `list_products()`: Display all available products
+## 6. 主要组件说明
+
+## 6. Component Details
+
+### 6.1 Shopping Agent
+The core intelligent assistant, with the following capabilities:
+- `list_products()`: Display all products
 - `select_product_by_name()`: Select products by name
-- `proceed_for_payment()`: Handle payment and settlement processes
+- `proceed_for_payment()`: Handle payment and settlement
 
-### A2A CLI
-
-Agent-to-Agent communication client that supports:
+### 6.2 A2A CLI
+Agent-to-Agent communication client, supports:
 - Asynchronous message sending and receiving
 - Context and task state management
-- Multi-turn conversation support
+- Multi-turn conversation
 
-### MCP CLI
-
-Model Context Protocol client that provides:
-- Server-Sent Events (SSE) connections
+### 6.3 MCP CLI
+Model Context Protocol client, supports:
+- SSE connections
 - Tool invocation interface
 - Session management
 
-### Shopping Service
-
-FastAPI backend service that provides:
-- `/notify` - Receive payment notifications
-- `/status` - Query order status
-- `/reset` - Reset order status
+### 6.4 Shopping Service
+FastAPI backend service, provides:
+- `/notify`: Receive payment notifications
+- `/status`: Query order status
+- `/reset`: Reset order status
 
 ## Development and Debugging
 
-### Running Components Independently
+---
 
-```bash
-# Run A2A CLI
-uv run python a2a_cli/cli.py
+## 7. 开发与调试
 
-# Run MCP CLI
-uv run python mcp_cli/cli.py
+## 7. Development & Debugging
 
-# Run shopping service
-uv run python shopping_service/server.py
-```
-
-### Logging Configuration
-
-All components are configured with detailed logging output to help you understand the system's running status:
+### 7.1 Logging Configuration
+All components are configured with detailed logging output to help you track the system status:
 
 ```python
 import logging
@@ -170,61 +227,88 @@ logger.setLevel(logging.INFO)
 
 ## Troubleshooting
 
-### Q: A2A server connection failed
-**A**: Ensure the A2A server is running on `localhost:10000` and check network connectivity.
+---
 
-### Q: MCP server connection failed
-**A**: Ensure the MCP server is running on `localhost:8015` and verify that the SSE endpoint is accessible.
+## 8. 常见问题与排查
 
-### Q: Google ADK initialization failed
-**A**: Check if the `GOOGLE_API_KEY` environment variable is correctly set.
+## 8. Troubleshooting
 
-### Q: Product selection not responding
-**A**: Ensure the product name is entered correctly. The system uses fuzzy matching (case-insensitive).
+**Q: A2A service connection failed?**
+A: Make sure the A2A service is running on local port 10000 and check network connectivity.
+
+**Q: MCP service connection failed?**
+A: Make sure the MCP service is running on local port 8015 and the SSE endpoint is accessible.
+
+**Q: Google ADK initialization failed?**
+A: Check if the `GOOGLE_API_KEY` environment variable is set correctly.
+
+**Q: Product selection not responding?**
+A: Make sure the product name is entered correctly. The system supports fuzzy (case-insensitive) matching.
 
 ## Extension Development
 
-### Adding New Products
+---
 
-Edit the `product_list` in `shopping_agent/agent.py`:
+## 9. 扩展开发
+
+## 9. Extension Development
+
+### 9.1 Add New Products
+Edit the `product_list` in `shopping_agent/agent.py`, for example:
 
 ```python
 product_list.append({
-    "id": 10, 
-    "name": "New Product", 
-    "price": 299, 
+    "id": 10,
+    "name": "New Product",
+    "price": 299,
     "payee": "Merchant C"
 })
 ```
 
-### Customizing Payment Flow
+### 9.2 Customize Payment Flow
+To support different payment methods or business logic, modify the `proceed_for_payment()` method.
 
-Modify the `proceed_for_payment()` function to support different payment methods or business logic.
-
-### Integrating Other Services
-
-You can easily integrate other external services or APIs by adding new tool functions.
+### 9.3 Integrate External Services
+Extend tool functions to integrate third-party APIs or services.
 
 ## Technology Stack
 
-- **Python 3.13+**: Primary programming language
-- **Google ADK**: Agent development framework
-- **FastAPI**: Web service framework
-- **A2A SDK**: Agent-to-Agent communication
-- **MCP**: Model Context Protocol
-- **UV**: Modern Python package manager
-- **HTTPX**: Asynchronous HTTP client
+---
+
+## 10. 技术栈
+
+## 10. Technology Stack
+
+- Python 3.13+
+- Google ADK
+- FastAPI
+- A2A SDK
+- MCP
+- uv
+- HTTPX
 
 ## Contributing
 
-1. Fork the project
+---
+
+## 11. 贡献指南
+
+## 11. Contributing
+
+1. Fork this project
 2. Create a feature branch
 3. Commit your changes
 4. Submit a Pull Request
 
 ## License
 
-Please refer to the LICENSE file in the project root directory for license information.
+---
+
+## 12. License
+
+## 12. License
+
+Please refer to the LICENSE file in the project root directory.
 
 ---
 
