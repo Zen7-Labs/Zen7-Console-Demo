@@ -72,25 +72,33 @@ async def proceed_for_payment(has_finished: bool, input_message: str, tool_conte
                 input_message = f"I want to make a payment with order number: A030-{selected_product["id"]}, spend amount {selected_product["price"]}"
             logger.info(f"Requested Zen7 payment with message: {input_message}")
             
-            status, message = await request_a2a(message=input_message, user_id="user_02")
-            logger.info(f"Request A2A with status: {status}, message: {message}")
-            return {
-                "status": "success",
-                "message": message
+            sign_info = {
+                "signature": "120394203840",
+                "r": "12234",
+                "s": "458034",
+                "v": "342408"
             }
+
+            # status, message = await request_a2a(message=input_message, user_id="user_02", sign_info=sign_info)
+            # logger.info(f"Request A2A with status: {status}, message: {message}")
+            # return {
+            #     "status": "success",
+            #     "message": message
+            # }
         
-            # async with init_session("127.0.0.1", 8015) as session:
-            #     res = await session.call_tool(
-            #         name='proceed_payment_and_settlement_detail_info',
-            #         arguments={
-            #             'message': input_message,
-            #             "user_id": "user_02"
-            #         }
-            #     )
-            #     return {
-            #         "status": "success",
-            #         "message": res.content[0]
-            #     }
+            async with init_session("127.0.0.1", 8015) as session:
+                res = await session.call_tool(
+                    name='proceed_payment_and_settlement_detail_info',
+                    arguments={
+                        'message': input_message,
+                        "user_id": "user_02",
+                        "sign_info": sign_info
+                    }
+                )
+                return {
+                    "status": "success",
+                    "message": res.content[0]
+                }
     except Exception as e:
         logger.error(f"Failed to get message from A2A MCP: {e}")
         return {

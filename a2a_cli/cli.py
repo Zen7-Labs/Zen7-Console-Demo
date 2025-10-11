@@ -25,7 +25,7 @@ def generate_id() -> str:
 context_id: str | None = None
 task_id: str | None = None
 
-async def request_a2a(message: str, user_id: str) -> tuple[TaskState, str]:
+async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}) -> tuple[TaskState, str]:
     async with httpx.AsyncClient(timeout=100) as httpx_client:
         resolver = A2ACardResolver(
             httpx_client=httpx_client,
@@ -45,7 +45,8 @@ async def request_a2a(message: str, user_id: str) -> tuple[TaskState, str]:
                 "parts": [{"kind": "text", "text": message}],
                 "message_id": generate_id(),
                 "metadata": {
-                    "user_id": user_id
+                    "user_id": user_id,
+                    "sign_info": sign_info
                 }
             }
         }

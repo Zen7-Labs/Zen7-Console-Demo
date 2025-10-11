@@ -54,7 +54,13 @@ async def main_async():
                 name="proceed_payment_and_settlement_detail_info",
                 arguments={
                     "message": input_message,
-                    "user_id": "user_02"
+                    "user_id": "user_02",
+                    "sign_info": {
+                        "signature": "120394203840",
+                        "r": "12234",
+                        "s": "458034",
+                        "v": "342408"
+                    }
                 }
             )
             logger.info(f"result: {res.content}")
