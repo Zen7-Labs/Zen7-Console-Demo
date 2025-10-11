@@ -1,6 +1,4 @@
-import logging
 from logging import getLogger, StreamHandler
-from dotenv import load_dotenv
 
 from contextlib import asynccontextmanager
 
@@ -11,9 +9,6 @@ import asyncio
 
 logger = getLogger(__name__)
 logger.addHandler(StreamHandler())
-logger.setLevel(level=logging.INFO)
-
-load_dotenv()
 
 @asynccontextmanager
 async def init_session(host: str, port: int):

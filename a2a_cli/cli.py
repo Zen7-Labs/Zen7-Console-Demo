@@ -1,4 +1,3 @@
-import logging
 from logging import getLogger, StreamHandler
 
 from uuid import uuid4
@@ -13,11 +12,15 @@ from a2a.client import A2ACardResolver, A2AClient
 import httpx
 import asyncio
 
+from dotenv import load_dotenv
+import os
+
 logger = getLogger(__name__)
 logger.addHandler(StreamHandler())
-logger.setLevel(level=logging.INFO)
 
-A2A_SERVER_URL = "http://localhost:10000"
+load_dotenv()
+
+A2A_SERVER_URL = os.getenv("A2A_SERVER_URL")
 
 def generate_id() -> str:
     return uuid4().hex
@@ -94,7 +97,7 @@ async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}
 async def main_async():
     while True:
         input_messge = input("You: ")
-        status, message = await request_a2a(input_messge, "user_02")
+        status, message = await request_a2a(input_messge, "user_02", sign_info={})
         logger.info(f"Response - status: {status}, message: {message}")
 
 if __name__ == "__main__":
