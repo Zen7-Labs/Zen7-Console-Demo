@@ -44,7 +44,7 @@ def select_product_by_name(product_name: str, tool_context: ToolContext) -> dict
         logger.error("Product name is unset")
         return {"status": "failed", "message": "product name is unset"}
 
-    res = requests.put(os.getenv("NOTIFICATION_URL"))
+    res = requests.put(os.getenv("RESET_STATUS_URL"))
     if res.ok:
         data = res.json()
         logger.info(f"Successfully reset the has_finished to: {data["status"]}")
@@ -98,7 +98,7 @@ async def proceed_for_payment(has_finished: bool, input_message: str, tool_conte
         turn += 1
     tool_context.state["turn"] = turn
     try:
-        res = requests.get(os.getenv("NOTIFICATION_URL"))
+        res = requests.get(os.getenv("CHECK_STATUS_URL"))
         if res.ok:
             data = res.json()
             has_finished = data["status"]
