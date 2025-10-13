@@ -28,7 +28,7 @@ def generate_id() -> str:
 context_id: str | None = None
 task_id: str | None = None
 
-async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}) -> tuple[TaskState, str]:
+async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}, owner_wallet_address: str = "") -> tuple[TaskState, str]:
     async with httpx.AsyncClient(timeout=100) as httpx_client:
         resolver = A2ACardResolver(
             httpx_client=httpx_client,
@@ -49,7 +49,8 @@ async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}
                 "message_id": generate_id(),
                 "metadata": {
                     "user_id": user_id,
-                    "sign_info": sign_info
+                    "sign_info": sign_info,
+                    "owner_wallet_address": owner_wallet_address
                 }
             }
         }
@@ -97,7 +98,7 @@ async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}
 async def main_async():
     while True:
         input_messge = input("You: ")
-        status, message = await request_a2a(input_messge, "user_02", sign_info={})
+        status, message = await request_a2a(input_messge, "user_02", sign_info={}, owner_wallet_address="")
         logger.info(f"Response - status: {status}, message: {message}")
 
 if __name__ == "__main__":

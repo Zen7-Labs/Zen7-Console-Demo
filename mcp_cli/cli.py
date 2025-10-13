@@ -55,7 +55,8 @@ async def main_async():
                         "r": "12234",
                         "s": "458034",
                         "v": "342408"
-                    }
+                    },
+                    "owner_wallet_address": ""
                 }
             )
             logger.info(f"result: {res.content}")
