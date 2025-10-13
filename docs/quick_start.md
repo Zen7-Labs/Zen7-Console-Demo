@@ -133,6 +133,14 @@ You can start each component separately for development and debugging:
 (venv) $ uv run python shopping_service/server.py
 ```
 
+#### Example A2A CLI Conversation
+
+```
+You: I want to make a payment with order number: 1568715435, spend amount: 99.0, budget: 129.0, expiration date is: 2025-10-14, currency is: USDC
+
+Agent (TaskState.completed): OK. I have processed your payment details. The settlement process has begun, and the payee agent will be notified upon completion.
+```
+
 ## Usage Guide
 
 ---
