@@ -77,12 +77,19 @@ Create a `.env` file in the project root directory with the following content (f
 # Google API Key
 GOOGLE_API_KEY=your_google_api_key_here
 
+# Choose target server to connect with specified A2A or MCP client.
+TARGET_SERVER=a2a
+
 # A2A Service Configuration
 A2A_SERVER_URL=http://localhost:10000
 
 # MCP Service Configuration
 MCP_HOST=127.0.0.1
 MCP_PORT=8015
+
+# Provide shopping_service URL to check or reset status to assist proceeding payment and settlement decide whether it has finished.
+CHECK_STATUS_URL=http://localhost:8088/status
+RESET_STATUS_URL=http://localhost:8088/reset
 ```
 
 > For blockchain or payment integration, refer to the relevant documentation to add more environment variables as needed.
@@ -90,6 +97,7 @@ MCP_PORT=8015
 ### 3. Start Backend Service
 
 #### 3.1 Start the Shopping Service (Backend API)
+- Provide service to check or reset status to assist proceeding payment and settlement decide whether it has finished.
 
 ```bash
 (venv) $ uv run python shopping_service/server.py
