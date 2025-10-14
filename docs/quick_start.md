@@ -29,13 +29,13 @@ This section guides you through initializing your development environment, inclu
 #### 1.1 Clone the Repository
 
 ```bash
-git clone https://github.com/Zen7-Labs/examples.git
+git clone https://github.com/Zen7-Labs/Zen7-Console-Demo.git
 ```
 
 #### 1.2 Enter the Project Directory
 
 ```bash
-cd examples
+cd Zen7-Console-Demo
 ```
 
 #### 1.3 Create and Activate a Virtual Environment (Recommended)
