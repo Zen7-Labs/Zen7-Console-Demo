@@ -46,7 +46,7 @@ async def main_async():
         while True:
             input_message = input("You: ")
             res = await session.call_tool(
-                name="proceed_payment_and_settlement_detail_info",
+                name="proceed_payment_and_settlement_and_order_details",
                 arguments={
                     "message": input_message,
                     "user_id": "user_02",

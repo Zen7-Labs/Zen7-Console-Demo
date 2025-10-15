@@ -5,6 +5,7 @@ import requests
 
 from dotenv import load_dotenv
 import os
+import json
 
 load_dotenv()
 
@@ -35,9 +36,9 @@ product_list = [
 user_id = "user_02"
 sign_info = {}
 
-def list_products() -> list[dict[str, any]]:
+def list_products() -> str:
     logger.info(f"List products: {product_list}")
-    return product_list
+    return json.dumps(product_list)
 
 def select_product_by_name(product_name: str, tool_context: ToolContext) -> dict[str, any]:
     if not product_name:
@@ -127,7 +128,7 @@ async def proceed_for_payment(has_finished: bool, input_message: str, tool_conte
         "message": f"Proceed payment for the product: {selected_product}"
     }
 
-async def proceed_order_info(input_message: str) -> dict[str, any]:
+async def proceed_order_detail(input_message: str) -> dict[str, any]:
     return await proceed_by_target_server(input_message=input_message, user_id=user_id, sign_info=sign_info)
 
 
@@ -140,11 +141,11 @@ root_agent = Agent(
         then take the selected product to invoke 'proceed_for_payment' tool to proceed the settlement and the order.
 
         **Core Capabilities**
-        1. Use 'list_product' tool show product list for user that available to buy.
+        1. Use 'list_product' tool MUST RETURN the product list in detail to user help select product to buy.
         2. User can select one product by name then store it into context for 'selected_product'
         3. Take this selected product to prepare for creating payment and settlement.
         4. Keep asking step by step via tool 'proceed_for_payment' with 'input_message' while the 'has_finished' parameter is FALSE.
         5. The 'input_message' for tool 'proceed_for_payment' MUST answer by user.
-        6. Use 'proceed_order_info' to get or show order info.""",
-    tools=[list_products, select_product_by_name, proceed_for_payment, proceed_order_info]
+        6. Use 'proceed_order_detail' to get order by the provided order number.""",
+    tools=[list_products, select_product_by_name, proceed_for_payment, proceed_order_detail]
 )
