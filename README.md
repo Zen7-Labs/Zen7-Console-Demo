@@ -1,4 +1,4 @@
-# Shopping Agent Quick Start Guide
+# Shopping Agent Console Demo Guide
 
 ## Project Overview
 
