@@ -28,7 +28,7 @@ def generate_id() -> str:
 context_id: str | None = None
 task_id: str | None = None
 
-async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}, owner_wallet_address: str = "") -> tuple[TaskState, str]:
+async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}, owner_wallet_address: str = "", payment_info: dict[str, any] = {}) -> tuple[TaskState, str]:
     async with httpx.AsyncClient(timeout=100) as httpx_client:
         resolver = A2ACardResolver(
             httpx_client=httpx_client,
@@ -50,7 +50,8 @@ async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}
                 "metadata": {
                     "user_id": user_id,
                     "sign_info": sign_info,
-                    "owner_wallet_address": owner_wallet_address
+                    "owner_wallet_address": owner_wallet_address,
+                    "payment_info": payment_info
                 }
             }
         }
@@ -96,9 +97,22 @@ async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}
         return TaskState.unknown, ""
 
 async def main_async():
+    sign_info = {
+        "signature": "120394203840",
+        "r": "12234",
+        "s": "458034",
+        "v": "342408"
+    }
+    payment_info = {
+        "order_number": "B300390",
+        "spend_amount": 3003.00,
+        "budget": 3400.01,
+        "currency": "USDC",
+        "expiration_date": "2025-10-15"
+    }
     while True:
         input_messge = input("You: ")
-        status, message = await request_a2a(input_messge, "user_02", sign_info={}, owner_wallet_address="")
+        status, message = await request_a2a(input_messge, "user_02", sign_info={}, owner_wallet_address="", payment_info=payment_info)
         logger.info(f"Response - status: {status}, message: {message}")
 
 if __name__ == "__main__":
