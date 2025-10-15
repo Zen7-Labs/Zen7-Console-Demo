@@ -1,4 +1,4 @@
-# Shopping Agent Quick Start Guide
+# Shopping Agent Console Demo Guide
 
 ## Project Overview
 
@@ -42,24 +42,24 @@ cd Zen7-Console-Demo
 
 1. Create the virtual environment:
 
-        ```bash
-        uv venv
-        ```
+```bash
+uv venv
+```
 
-2. Activate the virtual environment:
+1. Activate the virtual environment:
 
-        - **Linux/macOS:**
-            ```bash
-            source .venv/bin/activate
-            ```
-        - **Windows (CMD):**
-            ```bash
-            .venv\Scripts\activate
-            ```
-        - **Windows (PowerShell):**
-            ```powershell
-            .venv\Scripts\Activate.ps1
-            ```
+- **Linux/macOS:**
+   ```bash
+   source .venv/bin/activate
+   ```
+- **Windows (CMD):**
+   ```bash
+   .venv\Scripts\activate
+   ```
+- **Windows (PowerShell):**
+   ```powershell
+   .venv\Scripts\Activate.ps1
+   ```
 
 > After activation, your command prompt should show (venv) at the beginning.
 
@@ -141,7 +141,15 @@ You can start each component separately for development and debugging:
 (venv) $ uv run python shopping_service/server.py
 ```
 
-## Usage Guide
+#### Example A2A CLI Conversation
+
+```
+You: I want to make a payment with order number: 1568715435, spend amount: 99.0, budget: 129.0, expiration date is: 2025-10-14, currency is: USDC
+
+Agent (TaskState.completed): OK. I have processed your payment details. The settlement process has begun, and the payee agent will be notified upon completion.
+```
+
+## Shopping console chat flow
 
 ---
 
@@ -149,7 +157,7 @@ You can start each component separately for development and debugging:
 
 ## 5. Usage Guide
 
-### 5.1 Shopping Workflow
+### 5.1 Shopping console chat flow
 
 1. **Browse Products**: Ask the assistant to display all available products
 2. **Select Product**: Choose a product to purchase by name
@@ -188,58 +196,10 @@ Assistant: [Processes payment and displays order status]
 
 ---
 
-## 6. 主要组件说明
 
-## 6. Component Details
+## 6. 常见问题与排查
 
-### 6.1 Shopping Agent
-The core intelligent assistant, with the following capabilities:
-- `list_products()`: Display all products
-- `select_product_by_name()`: Select products by name
-- `proceed_for_payment()`: Handle payment and settlement
-
-### 6.2 A2A CLI
-Agent-to-Agent communication client, supports:
-- Asynchronous message sending and receiving
-- Context and task state management
-- Multi-turn conversation
-
-### 6.3 MCP CLI
-Model Context Protocol client, supports:
-- SSE connections
-- Tool invocation interface
-- Session management
-
-### 6.4 Shopping Service
-FastAPI backend service, provides:
-- `/notify`: Receive payment notifications
-- `/status`: Query order status
-- `/reset`: Reset order status
-
-## Development and Debugging
-
----
-
-## 7. 开发与调试
-
-## 7. Development & Debugging
-
-### 7.1 Logging Configuration
-All components are configured with detailed logging output to help you track the system status:
-
-```python
-import logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-```
-
-## Troubleshooting
-
----
-
-## 8. 常见问题与排查
-
-## 8. Troubleshooting
+## 6. Troubleshooting
 
 **Q: A2A service connection failed?**
 A: Make sure the A2A service is running on local port 10000 and check network connectivity.
@@ -257,11 +217,11 @@ A: Make sure the product name is entered correctly. The system supports fuzzy (c
 
 ---
 
-## 9. 扩展开发
+## 7. 扩展开发
 
-## 9. Extension Development
+## 7. Extension Development
 
-### 9.1 Add New Products
+### 7.1 Add New Products
 Edit the `product_list` in `shopping_agent/agent.py`, for example:
 
 ```python
@@ -273,19 +233,19 @@ product_list.append({
 })
 ```
 
-### 9.2 Customize Payment Flow
+### 7.2 Customize Payment Flow
 To support different payment methods or business logic, modify the `proceed_for_payment()` method.
 
-### 9.3 Integrate External Services
+### 7.3 Integrate External Services
 Extend tool functions to integrate third-party APIs or services.
 
 ## Technology Stack
 
 ---
 
-## 10. 技术栈
+## 8. 技术栈
 
-## 10. Technology Stack
+## 8. Technology Stack
 
 - Python 3.13+
 - Google ADK
@@ -295,29 +255,24 @@ Extend tool functions to integrate third-party APIs or services.
 - uv
 - HTTPX
 
-## Contributing
 
 ---
 
-## 11. 贡献指南
+## Citation
 
-## 11. Contributing
+If you find Zen7 Payment Agent helpful in your research or project, please cite it as:
 
-1. Fork this project
-2. Create a feature branch
-3. Commit your changes
-4. Submit a Pull Request
+```bibtex
+@misc{zen7paymentagent,
+  author = {Zen7 Labs},
+  title = {Zen7 Payment Agent: AI-Powered Blockchain Payment Service},
+  year = {2025},
+  publisher = {GitHub},
+  url = {https://github.com/Zen7-Labs/Zen7-Payment-Agent}
+}
+```
 
 ## License
 
----
+Apache License Version 2.0
 
-## 12. License
-
-## 12. License
-
-Please refer to the LICENSE file in the project root directory.
-
----
-
-For more help, please refer to the project documentation or submit an Issue.
