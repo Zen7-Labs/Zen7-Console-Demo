@@ -17,8 +17,8 @@ The project contains the following main components:
 
 - Python 3.13+
 - UV package manager
-- Running A2A server (localhost:10000)
-- Running MCP server (localhost:8015)
+- Running A2A server (Default - http://localhost:10000)
+- Running MCP server (Default - host: localhost, port: 8015)
 
 ## Quick Start
 
@@ -75,7 +75,7 @@ Create a `.env` file in the project root directory with the following content (f
 
 ```dotenv
 # Google API Key
-GOOGLE_API_KEY=your_google_api_key_here
+GOOGLE_API_KEY=<your_google_api_key_here>
 
 # Choose target server to connect with specified A2A or MCP client.
 TARGET_SERVER=a2a
@@ -94,16 +94,17 @@ RESET_STATUS_URL=http://localhost:8088/reset
 
 > For blockchain or payment integration, refer to the relevant documentation to add more environment variables as needed.
 
-### 3. Start Backend Service
+### 3. Start Services
 
-#### 3.1 Start the Shopping Service (Backend API)
-- Provide service to check or reset status to assist proceeding payment and settlement decide whether it has finished.
+#### 3.1 Start the Shopping Service (Status check API)
+- Provide service to check or reset status to assist proceeding payment and settlement decide whether it has finished in multi turns of conversation.
 
 ```bash
 (venv) $ uv run python shopping_service/server.py
 ```
 
-#### 3.2 Start the Main Application (Google ADK Web Interface)
+#### 3.2 Start the Main Application (Google ADK Web UI)
+- Make sure you current at the path `Zen7-Console-Demo`
 
 ```bash
 (venv) $ uv run adk web
@@ -120,132 +121,54 @@ Or run the script directly:
     uv run adk web
     ```
 
-> For custom ports, protocols, and other parameters, refer to the --help/-Help options in run.sh or run.ps1.
-
-### 4. Start Main Application
-
----
-
-### 4. Run Components Independently (for Development & Debugging)
-
-You can start each component separately for development and debugging:
-
-```bash
-# Start A2A CLI
-(venv) $ uv run python a2a_cli/cli.py
-
-# Start MCP CLI
-(venv) $ uv run python mcp_cli/cli.py
-
-# Start Shopping Service
-(venv) $ uv run python shopping_service/server.py
-```
-
-#### Example A2A CLI Conversation
-
-```
-You: I want to make a payment with order number: 1568715435, spend amount: 99.0, budget: 129.0, expiration date is: 2025-10-14, currency is: USDC
-
-Agent (TaskState.completed): OK. I have processed your payment details. The settlement process has begun, and the payee agent will be notified upon completion.
-```
-
-## Shopping console chat flow
-
----
-
-## 5. 使用指南
+> For custom IP, ports and other parameters, change them in the `.env` file.
 
 ## 5. Usage Guide
 
-### 5.1 Shopping console chat flow
+### 5.1 The main flow
 
-1. **Browse Products**: Ask the assistant to display all available products
-2. **Select Product**: Choose a product to purchase by name
-3. **Payment Process**: The system will guide you through payment and settlement
-4. **Order Tracking**: Check order status and payment details
+1. **List Products**: Ask the assistant that I want want to buy a product.
+2. **Select Product**: Choose a product to purchase by name.
+3. **Payment Process**: The assistant will automatical start the payment and settlement by your chosen product with its price and merchant info.
+4. **Order Tracking**: When the settlement has been processed, the assistant will notify the payee and return the order number in messages, you can retrieve the order info by using this order number
 
-### 5.2 Example Product List
-
-**Beverages (Merchant A):**
-- Beverage: ¥499
-- Red wine: ¥99
-- Whisky: ¥199
-- Brandy: ¥399
-- Moutai: ¥1499
-
-**Clothing (Merchant B):**
-- Jeans: ¥139
-- Coat: ¥299
-- Shirt: ¥199
-- Suit: ¥599
-
-### 5.3 Example Conversation
-
-```
-User: Show all products
-Assistant: [Displays product list]
-
-User: I want to buy a coat
-Assistant: [Selects coat and prepares payment process]
-
-User: [Follows prompts to complete payment information]
-Assistant: [Processes payment and displays order status]
-```
-
-## Component Details
-
----
-
-
-## 6. 常见问题与排查
+### 5.2 Example Conversation
+1. Open your browser and visit for URL `http://localhost:8000`
+![shopping_agent_demo_01](assets/shopping_agent_demo_01.png)
+2. Make sure you have chosen the `shopping_agent`.
+![shopping_agent_demo_02](assets/shopping_agent_demo_02.png)
+3. Chat with assistant to start buying a product
+![shopping_agent_demo_03](assets/shopping_agent_demo_03.png)
+4. Wait settlement to completed then get order by the order number.
+![shopping_agent_demo_04](assets/shopping_agent_demo_04.png)
 
 ## 6. Troubleshooting
 
+**Q: My server is stuck**
+
+A: You need to make sure your system can visit `https://google.com`.
+
+**Q: How can I confirm which type of service was chosen?**
+
+A: Check the `.env` file for the option `TARGET_SERVER=a2a` decide the chosen type of service.
+
 **Q: A2A service connection failed?**
+
 A: Make sure the A2A service is running on local port 10000 and check network connectivity.
 
 **Q: MCP service connection failed?**
+
 A: Make sure the MCP service is running on local port 8015 and the SSE endpoint is accessible.
 
 **Q: Google ADK initialization failed?**
+
 A: Check if the `GOOGLE_API_KEY` environment variable is set correctly.
 
 **Q: Product selection not responding?**
+
 A: Make sure the product name is entered correctly. The system supports fuzzy (case-insensitive) matching.
 
-## Extension Development
-
----
-
-## 7. 扩展开发
-
-## 7. Extension Development
-
-### 7.1 Add New Products
-Edit the `product_list` in `shopping_agent/agent.py`, for example:
-
-```python
-product_list.append({
-    "id": 10,
-    "name": "New Product",
-    "price": 299,
-    "payee": "Merchant C"
-})
-```
-
-### 7.2 Customize Payment Flow
-To support different payment methods or business logic, modify the `proceed_for_payment()` method.
-
-### 7.3 Integrate External Services
-Extend tool functions to integrate third-party APIs or services.
-
 ## Technology Stack
-
----
-
-## 8. 技术栈
-
-## 8. Technology Stack
 
 - Python 3.13+
 - Google ADK
@@ -254,9 +177,6 @@ Extend tool functions to integrate third-party APIs or services.
 - MCP
 - uv
 - HTTPX
-
-
----
 
 ## Citation
 
