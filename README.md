@@ -2,7 +2,8 @@
 
 ## Project Overview
 
-Shopping Agent is an intelligent shopping assistant system built on Google ADK (Agent Development Kit). This project demonstrates how to integrate multiple services together, including A2A (Agent-to-Agent) communication, MCP (Model Context Protocol) client, and FastAPI services, to create a complete shopping and payment workflow.
+Shopping Agent is an intelligent shopping assistant system built on Google ADK (Agent Development Kit). This demo project showcases the integration of multiple services—including A2A (Agent-to-Agent) communication, MCP (Model Context Protocol) client deliver a complete end-to-end shopping and payment workflow.
+
 
 ## System Architecture
 
@@ -172,7 +173,6 @@ A: Make sure the product name is entered correctly. The system supports fuzzy (c
 
 - Python 3.13+
 - Google ADK
-- FastAPI
 - A2A SDK
 - MCP
 - uv
