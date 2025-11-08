@@ -34,7 +34,16 @@ product_list = [
 ]
 
 user_id = "user_02"
+# Leave sign_info empty means will be signed by payment server.
 sign_info = {}
+
+payment_info = {
+    "chain": os.getenv("CHAIN"),
+    "currency": os.getenv("CURRENCY")
+}
+
+# Should uses the same timezone setting as the payment server
+timezone = os.getenv("TIMEZONE")
 
 def list_products() -> str:
     logger.info(f"List products: {product_list}")
@@ -60,7 +69,8 @@ def select_product_by_name(product_name: str, tool_context: ToolContext) -> dict
 
 async def proceed_by_target_server(input_message: str, user_id: str, sign_info: dict[str, any] = {}) -> dict[str, any]:
     if target_server == "a2a":
-            status, message = await request_a2a(message=input_message, user_id=user_id, sign_info=sign_info)
+            status, message = await request_a2a(message=input_message, user_id=user_id, 
+                        sign_info=sign_info, payment_info=payment_info, timezone=timezone)
             logger.info(f"Request A2A with status: {status}, message: {message}")
             return {
                 "status": "success",
@@ -71,11 +81,13 @@ async def proceed_by_target_server(input_message: str, user_id: str, sign_info: 
         mcp_server_port = os.getenv("MCP_SERVER_PORT")
         async with init_session(mcp_server_host, int(mcp_server_port)) as session:
             res = await session.call_tool(
-                name='proceed_payment_and_settlement_detail_info',
+                name='proceed_payment_or_settlement_or_order_or_allowance_details',
                 arguments={
                     'message': input_message,
                     "user_id": user_id,
-                    "sign_info": sign_info
+                    "sign_info": sign_info,
+                    "payment_info": payment_info,
+                    "timezone": timezone
                 }
             )
             return {
@@ -112,9 +124,10 @@ async def proceed_for_payment(has_finished: bool, input_message: str, tool_conte
                 expiration_date = datetime.now() + timedelta(days=1)
                 expiration_date_str = expiration_date.strftime("%Y-%m-%d")
                 currency = "USDC"
+                chain = "sepolia"
                 input_message = (f"I want to make a payment with order number: A030-{selected_product["id"]},"
                 f"spend amount {selected_product["price"] * 100}, budget amount is {selected_product["price"] * 100}, "
-                f"expiration date is {expiration_date_str}, currency is {currency}")
+                f"expiration date is {expiration_date_str}, currency is {currency}, chain is {chain}")
             logger.info(f"Requested Zen7 payment with message: {input_message}")
             return await proceed_by_target_server(input_message, user_id, sign_info)
     except Exception as e:
@@ -128,17 +141,18 @@ async def proceed_for_payment(has_finished: bool, input_message: str, tool_conte
         "message": f"Proceed payment for the product: {selected_product}"
     }
 
-async def proceed_order_detail(input_message: str) -> dict[str, any]:
+async def proceed_order_or_allowance_detail(input_message: str) -> dict[str, any]:
     return await proceed_by_target_server(input_message=input_message, user_id=user_id, sign_info=sign_info)
 
 
 root_agent = Agent(
     name="Shopping_agent",
     model="gemini-2.0-flash-lite",
-    description="Help do shopping by selecting product and prepare for settlement and show orders",
+    description="Help do shopping by selecting product and prepare for settlement or show orders, get allowance separately",
     instruction="""
         Your key roles is to help user show the product list, select one product by name, 
-        then take the selected product to invoke 'proceed_for_payment' tool to proceed the settlement and the order.
+        then take the selected product to invoke 'proceed_for_payment' tool to proceed the settlement;
+        invoke 'proceed_order_or_allowance_detail' to get order by order number or get allowance by the owner wallet address.
 
         **Core Capabilities**
         1. Use 'list_product' tool MUST RETURN the product list in detail to user help select product to buy.
@@ -146,6 +160,7 @@ root_agent = Agent(
         3. Take this selected product to prepare for creating payment and settlement.
         4. Keep asking step by step via tool 'proceed_for_payment' with 'input_message' while the 'has_finished' parameter is FALSE.
         5. The 'input_message' for tool 'proceed_for_payment' MUST answer by user.
-        6. Use 'proceed_order_detail' to get order by the provided order number.""",
-    tools=[list_products, select_product_by_name, proceed_for_payment, proceed_order_detail]
+        6. Use 'proceed_order_or_allowance_detail' to get order by the provided order number.
+        7. Use 'proceed_order_or_allowance_detail' to get allowance by the owner wallet address.""",
+    tools=[list_products, select_product_by_name, proceed_for_payment, proceed_order_or_allowance_detail]
 )

@@ -7,6 +7,11 @@ from mcp.client.sse import sse_client
 
 import asyncio
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 logger = getLogger(__name__)
 logger.addHandler(StreamHandler())
 

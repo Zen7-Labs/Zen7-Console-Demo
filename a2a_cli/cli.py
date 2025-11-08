@@ -1,3 +1,4 @@
+import logging
 from logging import getLogger, StreamHandler
 
 from uuid import uuid4
@@ -17,6 +18,7 @@ import os
 
 logger = getLogger(__name__)
 logger.addHandler(StreamHandler())
+logger.setLevel(level=logging.INFO)
 
 load_dotenv()
 
@@ -28,7 +30,7 @@ def generate_id() -> str:
 context_id: str | None = None
 task_id: str | None = None
 
-async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}, owner_wallet_address: str = "", payment_info: dict[str, any] = {}) -> tuple[TaskState, str]:
+async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}, owner_wallet_address: str = "", payment_info: dict[str, any] = {}, timezone="") -> tuple[TaskState, str]:
     async with httpx.AsyncClient(timeout=100) as httpx_client:
         resolver = A2ACardResolver(
             httpx_client=httpx_client,
@@ -51,7 +53,8 @@ async def request_a2a(message: str, user_id: str, sign_info: dict[str, any] = {}
                     "user_id": user_id,
                     "sign_info": sign_info,
                     "owner_wallet_address": owner_wallet_address,
-                    "payment_info": payment_info
+                    "payment_info": payment_info,
+                    "timezone": timezone
                 }
             }
         }
@@ -108,11 +111,12 @@ async def main_async():
         "spend_amount": 3003.00,
         "budget": 3400.01,
         "currency": "USDC",
-        "expiration_date": "2025-10-15"
+        "chain": "sepolia",
+        "expiration_date": "2025-12-16"
     }
     while True:
         input_messge = input("You: ")
-        status, message = await request_a2a(input_messge, "user_02", sign_info={}, owner_wallet_address="", payment_info=payment_info)
+        status, message = await request_a2a(input_messge, "user_02", sign_info={}, owner_wallet_address="", payment_info=payment_info, timezone="Asia/Shanghai")
         logger.info(f"Response - status: {status}, message: {message}")
 
 if __name__ == "__main__":
